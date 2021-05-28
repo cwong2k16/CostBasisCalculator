@@ -20,7 +20,7 @@ public class Calculator {
 	0.011709		4250			49.76325
 	*/
 	public static void main (String [] args) {
-		File excelFile = new File("C:\\Users\\C\\Downloads\\Crypto Tracker.xlsx");
+		File excelFile = new File("Crypto Tracker.xlsx");
 	    FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(excelFile);
