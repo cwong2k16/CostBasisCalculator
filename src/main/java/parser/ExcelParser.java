@@ -30,7 +30,7 @@ public class ExcelParser {
             e.printStackTrace();
         }
 
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        XSSFSheet sheet = workbook.getSheetAt(3);
 
         /* Example sheet : data starts at index 2
             |    BTC     |
