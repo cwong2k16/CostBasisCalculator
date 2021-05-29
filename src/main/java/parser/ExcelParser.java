@@ -8,13 +8,13 @@ import java.util.*;
 public class ExcelParser {
     private File excelFile;
     private FileInputStream fis = null;
-    private ArrayList<ArrayList<Double>> dataSet = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<Double>>> sheetList = new ArrayList<>();
 
     public ExcelParser(String file) {
         this.excelFile = new File(file);
     }
 
-    public ArrayList<ArrayList<Double>> parse() {
+    public ArrayList<ArrayList<ArrayList<Double>>> parse() {
         try {
             fis = new FileInputStream(excelFile);
         } catch (FileNotFoundException e) {
@@ -30,7 +30,7 @@ public class ExcelParser {
             e.printStackTrace();
         }
 
-        XSSFSheet sheet = workbook.getSheetAt(3);
+        int numberOfSheets = workbook.getNumberOfSheets();
 
         /* Example sheet : data starts at index 2
             |    BTC     |
@@ -39,18 +39,26 @@ public class ExcelParser {
             | 2021-18-04 | 0.00028..|   55,792.72  |   15.748  | ... |
             | 2021-19-04 | 0.00270..|   55,120.51  |   148.95  | ... |
          */
-        int rowIndex = 2;
-        XSSFRow row = sheet.getRow(rowIndex);
-        while(row != null){
-            ArrayList<Double> innerDataSet = new ArrayList<>();
-            innerDataSet.add(row.getCell(1).getNumericCellValue());
-            innerDataSet.add(row.getCell(2).getNumericCellValue());
-            innerDataSet.add(row.getCell(3).getNumericCellValue());
-            dataSet.add(innerDataSet);
 
-            rowIndex++;
-            row = sheet.getRow(rowIndex);
+        int sheetIndex = 0;
+        while(sheetIndex < numberOfSheets) {
+            ArrayList<ArrayList<Double>> dataList = new ArrayList<>();
+            int rowIndex = 2;
+            XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+            XSSFRow row = sheet.getRow(rowIndex);
+            while (row != null) {
+                ArrayList<Double> innerDataSet = new ArrayList<>();
+                innerDataSet.add(row.getCell(1).getNumericCellValue());
+                innerDataSet.add(row.getCell(2).getNumericCellValue());
+                innerDataSet.add(row.getCell(3).getNumericCellValue());
+                dataList.add(innerDataSet);
+
+                rowIndex++;
+                row = sheet.getRow(rowIndex);
+            }
+            sheetList.add(dataList);
+            sheetIndex++;
         }
-        return dataSet;
+        return sheetList;
     }
 }
