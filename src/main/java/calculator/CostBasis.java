@@ -9,6 +9,13 @@ public class CostBasis {
         this.sheetList = sheetList;
     }
 
+    /* EXAMPLE
+    Coin Amount	    Coin Price		Cost/Sold
+    0.011192		4513.1946		50.51167396
+    0.011756		4300			50.5508
+    -0.02294		4500			103.23
+    0.011709		4250			49.76325
+    */
     public void calculate() {
         int sheetIndex = 0;
         while (sheetIndex < this.sheetList.size()) {
