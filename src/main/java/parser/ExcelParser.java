@@ -8,13 +8,13 @@ import java.util.*;
 public class ExcelParser {
     private File excelFile;
     private FileInputStream fis = null;
-    private ArrayList<ArrayList<ArrayList<Double>>> sheetList = new ArrayList<>();
+    private HashMap<String, ArrayList<ArrayList<Double>>> sheetMap = new HashMap<>();
 
     public ExcelParser(String file) {
         this.excelFile = new File(file);
     }
 
-    public ArrayList<ArrayList<ArrayList<Double>>> parse() {
+    public HashMap<String, ArrayList<ArrayList<Double>>> parse() {
         try {
             fis = new FileInputStream(excelFile);
         } catch (FileNotFoundException e) {
@@ -56,9 +56,10 @@ public class ExcelParser {
                 rowIndex++;
                 row = sheet.getRow(rowIndex);
             }
-            sheetList.add(dataList);
+            String coin = sheet.getRow(0).getCell(0).getStringCellValue();
+            sheetMap.put(coin, dataList);
             sheetIndex++;
         }
-        return sheetList;
+        return sheetMap;
     }
 }
