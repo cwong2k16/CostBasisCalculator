@@ -5,8 +5,8 @@ import org.junit.jupiter.api.*;
 import java.util.*;
 
 public class ExcelParserTest {
-    ExcelParser excelParser = new ExcelParser("src\\main\\resources\\Crypto Tracker.xlsx");
-    HashMap<String, ArrayList<ArrayList<Double>>> sheetMap = excelParser.parse();
+    ExcelParser excelParser = new ExcelParser();
+    HashMap<String, ArrayList<ArrayList<Double>>> sheetMap = excelParser.parse("src\\test\\resources\\Crypto Tracker.xlsx");
 
     @Test
     public void shouldEqual4Sheets() {

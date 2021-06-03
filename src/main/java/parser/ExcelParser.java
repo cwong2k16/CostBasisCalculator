@@ -5,18 +5,10 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 import java.util.*;
 
-public class ExcelParser {
-    private File excelFile;
-    private FileInputStream fis = null;
-    private HashMap<String, ArrayList<ArrayList<Double>>> sheetMap = new HashMap<>();
-
-    public ExcelParser(String file) {
-        this.excelFile = new File(file);
-    }
-
-    public HashMap<String, ArrayList<ArrayList<Double>>> parse() {
+public class ExcelParser extends Parser {
+    public HashMap<String, ArrayList<ArrayList<Double>>> parse(String filePath) {
         try {
-            fis = new FileInputStream(excelFile);
+            fis = new FileInputStream(filePath);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

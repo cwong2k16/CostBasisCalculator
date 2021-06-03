@@ -6,8 +6,8 @@ import java.util.*;
 
 public class Driver {
     public static void main (String [] args) {
-        ExcelParser excelParser = new ExcelParser("src\\main\\resources\\Crypto Tracker.xlsx");
-        CostBasisCalculator costBasisCalculator = new CostBasisCalculator(excelParser.parse());
+        ExcelParser excelParser = new ExcelParser();
+        CostBasisCalculator costBasisCalculator = new CostBasisCalculator(excelParser.parse("src\\main\\resources\\Crypto Tracker.xlsx"));
         ArrayList<CostBasis> costBases = costBasisCalculator.calculate();
 
         for(CostBasis costBasis : costBases) {
@@ -16,6 +16,9 @@ public class Driver {
             System.out.println("Cost Basis: " + costBasis.getCostBasis());
             System.out.println();
         }
+
+        CSVParser csvParser = new CSVParser();
+        csvParser.parse("src\\main\\resources\\fills.csv");
     }
 
 }
