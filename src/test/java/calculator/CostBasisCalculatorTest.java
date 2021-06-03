@@ -8,7 +8,7 @@ import java.text.*;
 import java.util.*;
 
 public class CostBasisCalculatorTest {
-    private ExcelParser excelParser = new ExcelParser("src\\main\\resources\\Crypto Tracker.xlsx");
+    private ExcelParser excelParser = new ExcelParser("src\\test\\resources\\Crypto Tracker.xlsx");
     private CostBasisCalculator costBasisCalculator = new CostBasisCalculator(excelParser.parse());
     private ArrayList<CostBasis> costBases = costBasisCalculator.calculate();
     private DecimalFormat df = new DecimalFormat("0.000");

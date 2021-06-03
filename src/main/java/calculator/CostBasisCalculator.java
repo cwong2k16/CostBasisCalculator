@@ -32,6 +32,7 @@ public class CostBasisCalculator {
                 // negative means sell
                 if (list.get(i).get(1) < 0) {
                     coins -= list.get(i).get(0);
+                    costBasis = coins == 0 ? 0 : costBasis;
                 } else {
                     double totalCoins = coins + list.get(i).get(0);
                     double newCostBasis = (coins / totalCoins * costBasis) +
