@@ -26,15 +26,23 @@ public class CSVParser extends Parser {
         }
 
         for (CSVRecord record: records) {
+            String side = record.get("side"); // buy or sell
+            String unit = record.get("size unit"); // BTC, ETH, etc...
             double size = Double.parseDouble(record.get("size"));
             double price = Double.parseDouble(record.get("price"));
+            price = side.equals("SELL") ? price * -1 : price;
             double amount = size*price;
-            String unit = record.get("size unit");
-            String side = record.get("side");
 
-            System.out.println(side + " " + size + " of " + unit + " at " + price + ": " + amount);
+            ArrayList<Double> recordData = new ArrayList<>();
+            recordData.add(size);
+            recordData.add(price);
+            recordData.add(amount);
+
+            ArrayList<ArrayList<Double>> coinData = sheetMap.getOrDefault(unit, new ArrayList<>());
+            coinData.add(recordData);
+
+            sheetMap.put(unit, coinData);
         }
-
         return sheetMap;
     }
 }
