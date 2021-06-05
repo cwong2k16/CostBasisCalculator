@@ -1,5 +1,6 @@
 package parser;
 
+import object.*;
 import org.apache.commons.csv.*;
 
 import java.io.*;
@@ -7,7 +8,7 @@ import java.util.*;
 
 public class CSVParser extends Parser {
     @Override
-    public HashMap<String, ArrayList<ArrayList<Double>>> parse(String filePath) {
+    public ArrayList<RecordData> parse(String filePath) {
         Reader in = null;
         Iterable<CSVRecord> records = null;
 
@@ -33,16 +34,10 @@ public class CSVParser extends Parser {
             price = side.equals("SELL") ? price * -1 : price;
             double amount = size*price;
 
-            ArrayList<Double> recordData = new ArrayList<>();
-            recordData.add(size);
-            recordData.add(price);
-            recordData.add(amount);
+            RecordData recordData = new RecordData(unit, size, price, amount);
 
-            ArrayList<ArrayList<Double>> coinData = sheetMap.getOrDefault(unit, new ArrayList<>());
-            coinData.add(recordData);
-
-            sheetMap.put(unit, coinData);
+            transactions.add(recordData);
         }
-        return sheetMap;
+        return transactions;
     }
 }

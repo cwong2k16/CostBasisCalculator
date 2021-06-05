@@ -1,12 +1,13 @@
 package parser;
 
+import object.*;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
 import java.util.*;
 
 public class ExcelParser extends Parser {
-    public HashMap<String, ArrayList<ArrayList<Double>>> parse(String filePath) {
+    public ArrayList<RecordData> parse(String filePath) {
         try {
             fis = new FileInputStream(filePath);
         } catch (FileNotFoundException e) {
@@ -34,24 +35,23 @@ public class ExcelParser extends Parser {
 
         int sheetIndex = 0;
         while(sheetIndex < numberOfSheets) {
-            ArrayList<ArrayList<Double>> dataList = new ArrayList<>();
             int rowIndex = 2;
             XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
             XSSFRow row = sheet.getRow(rowIndex);
             while (row != null) {
-                ArrayList<Double> innerDataSet = new ArrayList<>();
-                innerDataSet.add(row.getCell(1).getNumericCellValue());
-                innerDataSet.add(row.getCell(2).getNumericCellValue());
-                innerDataSet.add(row.getCell(3).getNumericCellValue());
-                dataList.add(innerDataSet);
+                String unit = sheet.getRow(0).getCell(0).getStringCellValue();
+                double size = row.getCell(1).getNumericCellValue();
+                double price = row.getCell(2).getNumericCellValue();
+                double amount = row.getCell(3).getNumericCellValue();
+
+                RecordData recordData = new RecordData(unit, size, price, amount);
+                transactions.add(recordData);
 
                 rowIndex++;
                 row = sheet.getRow(rowIndex);
             }
-            String coin = sheet.getRow(0).getCell(0).getStringCellValue();
-            sheetMap.put(coin, dataList);
             sheetIndex++;
         }
-        return sheetMap;
+        return transactions;
     }
 }

@@ -1,11 +1,13 @@
 package parser;
 
+import object.*;
+
 import java.io.*;
 import java.util.*;
 
 public abstract class Parser {
     protected FileInputStream fis = null;
-    protected HashMap<String, ArrayList<ArrayList<Double>>> sheetMap = new HashMap<>();
+    protected ArrayList<RecordData> transactions = new ArrayList<>();
 
-    public abstract HashMap<String, ArrayList<ArrayList<Double>>> parse(String filePath);
+    public abstract ArrayList<RecordData> parse(String filePath);
 }
