@@ -5,10 +5,11 @@ import object.*;
 import java.util.*;
 
 public class CostBasisCalculator {
-    HashMap<String, ArrayList<ArrayList<Double>>> sheetMap;
+    ArrayList<RecordData> transactions;
+    HashMap<String, Queue<RecordData>> coinTracker = new HashMap<>();
 
-    public CostBasisCalculator(HashMap<String, ArrayList<ArrayList<Double>>> sheetMap) {
-        this.sheetMap = sheetMap;
+    public CostBasisCalculator(ArrayList<RecordData> transactions) {
+        this.transactions = transactions;
     }
 
     /* EXAMPLE
@@ -19,34 +20,35 @@ public class CostBasisCalculator {
     0.011709		4250			49.76325
     */
     public ArrayList<CostBasis> calculate() {
-        ArrayList<CostBasis> resultList = new ArrayList<>();
-        Iterator<Map.Entry<String, ArrayList<ArrayList<Double>>>> it = sheetMap.entrySet().iterator();
-        while (it.hasNext()) {
-            CostBasis costBasisObj = new CostBasis();
-            Map.Entry<String, ArrayList<ArrayList<Double>>> pair = it.next();
-            String name = pair.getKey();
-            double coins = 0;
-            double costBasis = 0;
-            ArrayList<ArrayList<Double>> list = pair.getValue();
-            for (int i = 0; i < list.size(); i++) {
-                // negative means sell
-                if (list.get(i).get(1) < 0) {
-                    coins -= list.get(i).get(0);
-                    costBasis = coins == 0 ? 0 : costBasis;
-                } else {
-                    double totalCoins = coins + list.get(i).get(0);
-                    double newCostBasis = (coins / totalCoins * costBasis) +
-                            (list.get(i).get(0) / totalCoins * list.get(i).get(1));
-                    coins = totalCoins;
-                    costBasis = newCostBasis;
+        for(RecordData recordData : transactions) {
+            // BUY logic
+            if(recordData.getAmount() > 0) {
+                Queue <RecordData> data = coinTracker.getOrDefault(recordData.getName(), new LinkedList<>());
+                data.add(recordData);
+                coinTracker.put(recordData.getName(), data);
+            }
+            // SELL logic, FIFO strategy
+            else {
+                boolean finished = false;
+                RecordData fromQueue = coinTracker.get(recordData.getName()).peek();
+                double difference = fromQueue.getSize() - recordData.getSize();
+
+                while(!finished) {
+                     if(difference < 0) {
+                        coinTracker.get(recordData.getName()).poll();
+                        difference = coinTracker.get(recordData.getName()).peek().getSize() + difference;
+                     }
+                     else {
+                         coinTracker.get(recordData.getName()).peek().setSize(difference);
+                         if(difference == 0){
+                             coinTracker.get(recordData.getName()).poll();
+                         }
+                        finished = true;
+                     }
                 }
             }
-            costBasisObj.setName(name);
-            costBasisObj.setCostBasis(costBasis);
-            costBasisObj.setCoins(coins);
-            resultList.add(costBasisObj);
-            it.remove(); // avoids a ConcurrentModificationException
         }
-        return resultList;
+        System.out.println(coinTracker);
+        return null;
     }
 }
