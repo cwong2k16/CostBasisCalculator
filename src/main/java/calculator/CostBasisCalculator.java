@@ -7,6 +7,8 @@ import java.util.*;
 public class CostBasisCalculator {
     ArrayList<RecordData> transactions;
     HashMap<String, Queue<RecordData>> coinTracker = new HashMap<>();
+    HashMap<String, PNL> pnlMap = new HashMap<>();
+    PNLCalculator pnlCalculator = new PNLCalculator();
 
     public CostBasisCalculator(ArrayList<RecordData> transactions) {
         this.transactions = transactions;
@@ -34,17 +36,18 @@ public class CostBasisCalculator {
             }
             // SELL logic, FIFO strategy
             else {
-                boolean finished = false;
                 RecordData fromQueue = coinTracker.get(recordData.getName()).peek();
                 double difference = fromQueue.getSize() - recordData.getSize();
 
+                boolean finished = false;
                 while(!finished) {
-                     if(difference < 0) {
+                    updatePNL(recordData, coinTracker.get(recordData.getName()).peek());
+                    if(difference < 0) {
                         coinTracker.get(recordData.getName()).poll();
                         difference = coinTracker.get(recordData.getName()).peek().getSize() + difference;
                      }
                      else {
-                         coinTracker.get(recordData.getName()).peek().setSize(difference);
+                        coinTracker.get(recordData.getName()).peek().setSize(difference);
                          if(difference == 0){
                              coinTracker.get(recordData.getName()).poll();
                          }
@@ -52,6 +55,19 @@ public class CostBasisCalculator {
                      }
                 }
             }
+        }
+    }
+
+    private void updatePNL(RecordData recordData, RecordData fromQueue) {
+        double pnl = pnlCalculator.calculate(fromQueue, recordData);
+        if (pnlMap.get(recordData.getName()) == null) {
+            pnlMap.put(recordData.getName(), new PNL());
+        }
+        if(pnl >= 0) {
+            pnlMap.get(fromQueue.getName()).setProfit(pnlMap.get(fromQueue.getName()).getProfit() + pnl);
+        }
+        else{
+            pnlMap.get(fromQueue.getName()).setLoss(pnlMap.get(fromQueue.getName()).getLoss() + pnl);
         }
     }
 
@@ -80,5 +96,9 @@ public class CostBasisCalculator {
             it.remove(); // avoids a ConcurrentModificationException
         }
         return resultList;
+    }
+
+    public HashMap<String, PNL> getPnlMap(){
+        return this.pnlMap;
     }
 }
