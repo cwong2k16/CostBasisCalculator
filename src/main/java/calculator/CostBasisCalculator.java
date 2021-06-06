@@ -20,6 +20,11 @@ public class CostBasisCalculator {
     0.011709		4250			49.76325
     */
     public ArrayList<CostBasis> calculate() {
+        calibrateHoldingWeights();
+        return calculateCostBasis();
+    }
+
+    private void calibrateHoldingWeights() {
         for(RecordData recordData : transactions) {
             // BUY logic
             if(recordData.getAmount() > 0) {
@@ -48,7 +53,32 @@ public class CostBasisCalculator {
                 }
             }
         }
-        System.out.println(coinTracker);
-        return null;
+    }
+
+    private ArrayList<CostBasis> calculateCostBasis() {
+        ArrayList<CostBasis> resultList = new ArrayList<>();
+        Iterator<Map.Entry<String, Queue<RecordData>>> it = coinTracker.entrySet().iterator();
+        while (it.hasNext()) {
+            CostBasis costBasisObj = new CostBasis();
+            Map.Entry<String, Queue<RecordData>> pair = it.next();
+            String name = pair.getKey();
+            double coins = 0;
+            double costBasis = 0;
+            Queue<RecordData> queue = pair.getValue();
+            while (queue.peek() != null) {
+                double totalCoins = coins + queue.peek().getSize();
+                double newCostBasis = (coins / totalCoins * costBasis) +
+                        (queue.peek().getSize() / totalCoins * queue.peek().getPrice());
+                coins = totalCoins;
+                costBasis = newCostBasis;
+                queue.poll();
+            }
+            costBasisObj.setName(name);
+            costBasisObj.setCostBasis(costBasis);
+            costBasisObj.setCoins(coins);
+            resultList.add(costBasisObj);
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        return resultList;
     }
 }
