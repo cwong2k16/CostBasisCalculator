@@ -32,9 +32,8 @@ public class CSVParser extends Parser {
             double size = Double.parseDouble(record.get("size"));
             double price = Double.parseDouble(record.get("price"));
             price = side.equals("SELL") ? price * -1 : price;
-            double amount = size*price;
 
-            RecordData recordData = new RecordData(unit, size, price, amount);
+            RecordData recordData = new RecordData(unit, size, price);
 
             transactions.add(recordData);
         }

@@ -6,11 +6,11 @@ public class RecordData {
     private double price;
     private double amount;
 
-    public RecordData(String name, double size, double price, double amount) {
+    public RecordData(String name, double size, double price) {
         this.name = name;
         this.size = size;
         this.price = price;
-        this.amount = amount;
+        this.amount = size*price;
     }
 
     public String getName() {

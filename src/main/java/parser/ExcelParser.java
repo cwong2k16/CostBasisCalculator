@@ -42,9 +42,8 @@ public class ExcelParser extends Parser {
                 String unit = sheet.getRow(0).getCell(0).getStringCellValue();
                 double size = row.getCell(1).getNumericCellValue();
                 double price = row.getCell(2).getNumericCellValue();
-                double amount = row.getCell(3).getNumericCellValue();
 
-                RecordData recordData = new RecordData(unit, size, price, amount);
+                RecordData recordData = new RecordData(unit, size, price);
                 transactions.add(recordData);
 
                 rowIndex++;
