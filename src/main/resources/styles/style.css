@@ -1,0 +1,11 @@
+.root {
+	-fx-font-family: "Verdana";
+	-fx-background-color:black;
+}
+
+.button {
+    -fx-font-family: "Verdana";
+    -fx-background-color:lightgrey;
+    -fx-pref-height:50px;
+    -fx-font-size: 25px;
+}
