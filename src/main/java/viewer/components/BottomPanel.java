@@ -8,11 +8,10 @@ import javafx.stage.*;
 import java.io.*;
 
 public class BottomPanel {
-    private HBox hBox;
     private Button browse;
     private FileChooser fileChooser;
     private File selectFile;
-    private String file;
+    private HBox hBox;
 
     public HBox build(){
         browse = new Button();
@@ -26,7 +25,7 @@ public class BottomPanel {
         return hBox;
     }
 
-    private void openFileChooser() {
+    public String openFileChooser() {
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter fileExtensions =
                 new FileChooser.ExtensionFilter(
@@ -35,7 +34,12 @@ public class BottomPanel {
         fileChooser.getExtensionFilters().add(fileExtensions);
         selectFile = fileChooser.showOpenDialog(null);
         if (selectFile != null) {
-            file = selectFile.getAbsolutePath();
+            return selectFile.getAbsolutePath();
         }
+        return null;
+    }
+
+    public Button getFileChooserButton() {
+        return browse;
     }
 }

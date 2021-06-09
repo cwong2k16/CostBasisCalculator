@@ -4,8 +4,22 @@
 }
 
 .button {
-    -fx-font-family: "Verdana";
+    -fx-font-family: "Helvetica", Arial, sans-serif;
     -fx-background-color:lightgrey;
     -fx-pref-height:50px;
     -fx-font-size: 25px;
+}
+
+.label {
+    -fx-pref-height:50px;
+    -fx-font-size: 25px;
+    -fx-text-fill: lightgrey;
+}
+
+#profit {
+    -fx-text-fill: green;
+}
+
+#loss {
+    -fx-text-fill: red;
 }
