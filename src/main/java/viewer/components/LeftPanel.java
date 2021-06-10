@@ -4,7 +4,7 @@ import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-public class CenterPanel {
+public class LeftPanel {
     private Label profitValue;
     private Label lossValue;
     private Label netPNLValue;

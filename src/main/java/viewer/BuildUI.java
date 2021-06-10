@@ -15,18 +15,18 @@ public class BuildUI {
     private Scene scene;
     private BorderPane borderPane;
     private BottomPanel bottomPanel;
-    private CenterPanel centerPanel;
+    private LeftPanel leftPanel;
     private HBox browse;
     private DecimalFormat df = new DecimalFormat("$0.00");
 
     public Scene build() {
         bottomPanel = new BottomPanel();
-        centerPanel = new CenterPanel();
+        leftPanel = new LeftPanel();
         browse = bottomPanel.build();
         borderPane = new BorderPane();
         borderPane.setPadding(new Insets(50, 10, 10, 10));
         borderPane.setBottom(browse);
-        borderPane.setLeft(centerPanel.build());
+        borderPane.setLeft(leftPanel.build());
         bottomPanel.getFileChooserButton().setOnAction(e-> execute(bottomPanel.openFileChooser()));
         scene = new Scene(borderPane);
         scene.getStylesheets().add("styles/style.css");
@@ -34,8 +34,9 @@ public class BuildUI {
     }
 
     public void execute(String filePath) {
-        CSVParser csvParser = new CSVParser();
-        CostBasisCalculator costBasisCalculator = new CostBasisCalculator(csvParser.parse(filePath));
+        ArrayList<RecordData> recordData = filePath.contains(".csv") ? new CSVParser().parse(filePath)
+                                                                      : new ExcelParser().parse(filePath);
+        CostBasisCalculator costBasisCalculator = new CostBasisCalculator(recordData);
         ArrayList<CostBasis> costBases = costBasisCalculator.calculate();
         HashMap<String, PNL> pnlHashMap = costBasisCalculator.getPnlMap();
         double totalProfit = 0;
@@ -56,18 +57,18 @@ public class BuildUI {
         }
         netPNL = totalProfit + totalLoss;
 
-        centerPanel.setProfitValue(df.format(totalProfit));
-        centerPanel.setLossValue(df.format(totalLoss));
-        centerPanel.setNetPNLValue(df.format(netPNL));
+        leftPanel.setProfitValue(df.format(totalProfit));
+        leftPanel.setLossValue(df.format(totalLoss));
+        leftPanel.setNetPNLValue(df.format(netPNL));
 
         togglePNLColor(netPNL);
     }
 
     public void togglePNLColor(double netPNL) {
         if (netPNL > 0) {
-            centerPanel.setNetPNLClass("profit");
+            leftPanel.setNetPNLClass("profit");
         } else {
-            centerPanel.setNetPNLClass("loss");
+            leftPanel.setNetPNLClass("loss");
         }
     }
 }

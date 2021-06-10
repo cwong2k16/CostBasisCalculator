@@ -29,7 +29,7 @@ public class BottomPanel {
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter fileExtensions =
                 new FileChooser.ExtensionFilter(
-                        "Excel/CSV","*.xslx", "*.csv");
+                        "Excel/CSV","*.xlsx", "*.csv");
 
         fileChooser.getExtensionFilters().add(fileExtensions);
         selectFile = fileChooser.showOpenDialog(null);
