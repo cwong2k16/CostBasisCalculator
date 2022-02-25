@@ -9,9 +9,13 @@ import javafx.scene.layout.*;
 import javafx.util.*;
 import object.*;
 
+import java.text.*;
+
 public class CenterPanel {
     private final TableView<RowData> cryptoDataTable = new TableView<>();
-    private VBox content;
+    private final VBox content;
+    private final DecimalFormat dfMoney = new DecimalFormat("$0.00");
+    private final DecimalFormat dfCoins = new DecimalFormat("0.00000");
 
     public CenterPanel() {
         content = new VBox();
@@ -25,26 +29,26 @@ public class CenterPanel {
 
         TableColumn numberOfCoinsCol = new TableColumn("# of Coins");
         numberOfCoinsCol.setMinWidth(100);
-        numberOfCoinsCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(Double.toString(param.getValue().getCostBasis().getCoins())));
+        numberOfCoinsCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(dfCoins.format(param.getValue().getCostBasis().getCoins())));
 
         TableColumn costBasisCol = new TableColumn("Cost Basis");
         costBasisCol.setMinWidth(100);
-        costBasisCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(Double.toString(param.getValue().getCostBasis().getCostBasis())));
+        costBasisCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(dfMoney.format(param.getValue().getCostBasis().getCostBasis())));
 
         TableColumn profitCol = new TableColumn("Profit");
         profitCol.setMinWidth(100);
         profitCol.setId("profit");
-        profitCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(Double.toString(param.getValue().getPnl().getProfit())));
+        profitCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(dfMoney.format(param.getValue().getPnl().getProfit())));
 
         TableColumn lossCol = new TableColumn("Loss");
         lossCol.setMinWidth(100);
         lossCol.setId("loss");
-        lossCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(Double.toString(param.getValue().getPnl().getLoss())));
+        lossCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(dfMoney.format(param.getValue().getPnl().getLoss())));
 
 
         TableColumn netPNLCol = new TableColumn("Net PNL");
         netPNLCol.setMinWidth(100);
-        netPNLCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(Double.toString(param.getValue().getPnl().getProfit() + param.getValue().getPnl().getLoss())));
+        netPNLCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<RowData, String>, ObservableValue<String>>) param -> new SimpleStringProperty(dfMoney.format(param.getValue().getPnl().getProfit() + param.getValue().getPnl().getLoss())));
 
         cryptoDataTable.getColumns().addAll(cryptoNameCol, numberOfCoinsCol, costBasisCol, profitCol, lossCol, netPNLCol);
         cryptoDataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
